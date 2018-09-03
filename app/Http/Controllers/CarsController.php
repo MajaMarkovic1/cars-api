@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Car;
 use Illuminate\Http\Request;
-use App\Http\Requests\StoreCar;
+use App\Http\Requests\StoreCarRequest;
 
 class CarsController extends Controller
 {
@@ -15,8 +15,8 @@ class CarsController extends Controller
      */
     public function index(Request $request)
     {
-        $take = $request->query('take');
-        $skip = $request->query('skip');
+        $take = $request->query('take', 5);
+        $skip = $request->query('skip', 0);
         
         if ($take || $skip){
             return Car::skip($skip)->take($take)->get();  
@@ -32,7 +32,7 @@ class CarsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreCar $request)
+    public function store(StoreCarRequest $request)
     {
         $validated = $request->validated();
 
@@ -59,9 +59,8 @@ class CarsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(StoreCar $request, $id)
+    public function update(Request $request, $id)
     {
-        $validated = $request->validated();
         
         $car = Car::findOrFail($id);
         $car->update($request->all());
